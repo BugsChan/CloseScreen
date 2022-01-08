@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Clear Screen</title>
+		<style type="text/css">
+			html, body{
+				height: 100%;
+				background-color: black;
+				border: 0px;
+				padding: 0px;
+				margin: 0px;
+			}
+			main{
+				text-align: center;
+				font-size: 20pt;
+				color: white;
+				user-select: none;
+			}
+		</style>
+	</head>
+	<body>
+		<main>
+			单击屏幕进入休眠, 再单击退出
+		</main>
+		<script type="text/javascript">
+			(() => {
+				let IS_SLEEP = false;
+				let main = document.querySelector("main");
+				const fullScreen = (IS_QUIT) => {
+					if(!IS_QUIT){
+						let element = document.documentElement;
+						let requestMethod = element.requestFullScreen || //W3C
+						element.webkitRequestFullScreen || //Chrome等
+						element.mozRequestFullScreen || //FireFox
+						element.msRequestFullScreen; //IE11
+						if (requestMethod) {
+							requestMethod.call(element);
+						}
+					}else{
+						let exitMethod = document.exitFullscreen || //W3C
+						document.mozCancelFullScreen || //Chrome等
+						document.webkitExitFullscreen || //FireFox
+						document.webkitExitFullscreen; //IE11
+						if (exitMethod) {
+							exitMethod.call(document);
+						}
+					}
+				};
+				window.addEventListener("click", (evt) => {
+					if(!IS_SLEEP){
+						main.style.display = "none";
+						document.body.style.cursor = "none";
+						IS_SLEEP = true;
+					}else{
+						main.style.display = "block";
+						document.body.style.cursor = "auto";
+						IS_SLEEP = false;
+					}
+					fullScreen(!IS_SLEEP);
+				});
+			})();
+		</script>
+	</body>
+</html>
