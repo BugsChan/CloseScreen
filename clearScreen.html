@@ -47,7 +47,8 @@
 						}
 					}
 				};
-				window.addEventListener("click", (evt) => {
+				//function to toogle 
+				const toogleStat = () => {
 					if(!IS_SLEEP){
 						main.style.display = "none";
 						document.body.style.cursor = "none";
@@ -58,6 +59,15 @@
 						IS_SLEEP = false;
 					}
 					fullScreen(!IS_SLEEP);
+				};
+				
+				window.addEventListener("click", (evt) => {
+					toogleStat();
+				});
+				window.addEventListener("keypress", (evt) => {
+					if(evt.keyCode == 32){
+						toogleStat();
+					}
 				});
 			})();
 		</script>
