@@ -4,29 +4,42 @@
 		<meta charset="utf-8">
 		<title>Clear Screen</title>
 		<style type="text/css">
+			*{
+				user-select: none;
+			}
 			html, body{
 				height: 100%;
-				background-color: black;
 				border: 0px;
 				padding: 0px;
 				margin: 0px;
+				background-size: 100% 100% !important;
 			}
-			main{
-				text-align: center;
-				font-size: 20pt;
+			.attention{
+				font-size: 25pt;
+				width: 100%;
 				color: white;
-				user-select: none;
+				text-align: center;
+				margin: 0px auto;
+				position: absolute;
+				z-index: 2;
+			}
+			.back{
+				background-color: black !important;
+				width: 100%;
+				height: 100%;
+				background-size: 100% 100% !important;
 			}
 		</style>
 	</head>
 	<body>
-		<main>
+		<div class="attention">
 			单击屏幕进入休眠, 再单击退出
-		</main>
+		</div>
+		<div class="back"></div>
 		<script type="text/javascript">
 			(() => {
 				let IS_SLEEP = false;
-				let main = document.querySelector("main");
+				let USE_BACKGROUND = false;
 				const fullScreen = (IS_QUIT) => {
 					if(!IS_QUIT){
 						let element = document.documentElement;
@@ -49,6 +62,7 @@
 				};
 				//function to toogle 
 				const toogleStat = () => {
+					let main = document.querySelector(".attention");
 					if(!IS_SLEEP){
 						main.style.display = "none";
 						document.body.style.cursor = "none";
@@ -61,8 +75,44 @@
 					fullScreen(!IS_SLEEP);
 				};
 				
-				window.addEventListener("click", (evt) => {
-					toogleStat();
+				const toogleBackground = () => {
+					let back = document.querySelector(".back");
+					if(!USE_BACKGROUND){
+						back.style.background = "url(./background.png)";
+					}else{
+						back.style.background = "";
+					}
+					USE_BACKGROUND = !USE_BACKGROUND;
+				};
+				
+				window.addEventListener("contextmenu", (evt) => {
+					evt.preventDefault();
+				});
+				
+				window.addEventListener("mousedown", (evt) => {
+					if(evt.button == 0){
+						toogleStat();
+					}else if(evt.button == 2){
+						toogleBackground();
+						evt.preventDefault();
+					}
+				});
+				
+				IMG_BRIGHTNESS = 50;
+				window.addEventListener("mousewheel", (evt) => {
+					const max = 150;
+					const min = 30;
+					if(evt.wheelDelta > 0){
+						if(IMG_BRIGHTNESS < max){
+							IMG_BRIGHTNESS += 5;
+						}
+					}else{
+						if(IMG_BRIGHTNESS > min){
+							IMG_BRIGHTNESS -= 5;
+						}
+					}
+					let back = document.querySelector(".back");
+					back.style.filter = `brightness(${IMG_BRIGHTNESS}%)`;
 				});
 				window.addEventListener("keypress", (evt) => {
 					if(evt.keyCode == 32){
